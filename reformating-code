@@ -1,10 +1,10 @@
 import requests
 import itertools
 from google.transit import gtfs_realtime_pb2
-# from google.protobuf.json_format import MessageToJson 
-# import json
+from google.protobuf.json_format import MessageToJson 
+import json
 
-# List of API keys
+# # List of API keys
 BUS_API = [
    "82b0450b-205f-491e-9ba1-2cdd76eef126",
     #MTA Bus Time system
@@ -21,7 +21,7 @@ Real_Time_Feeds = [
     "https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-bdfm"  
 ]
     
-# Create a cycle of API keys to rotate through them
+# # Create a cycle of API keys to rotate through them
 api_key_cycle = itertools.cycle(BUS_API)
 api_time_cycle = itertools.cycle(Real_Time_Feeds)
 
@@ -55,7 +55,7 @@ def fetch_mta_data():
             # Try the next feed if an error occurs
             continue
 
-    # If all keys and feeds fail
+  # If all keys and feeds fail
     print("All API keys or feeds failed. Please check your configuration or internet connection.")
     return None
 

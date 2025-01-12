@@ -64,36 +64,6 @@ def fetch_mta_data():
     return None
 
 
-
-# def fetch_mta_data():
-    
-#     for feed_url in Real_Time_Feeds :
-#         # Get the next API key from the cycle
-#         api_key = next(api_key_cycle)
-#         headers = {"x-api-key": api_key}
-
-#         try:
-#             # Make the GET request
-#             response = requests.get(feed_url, headers=headers)
-#             response.raise_for_status()  # Check for HTTP errors
-
-#             #error in .FeedMessage(), must be changed
-#             #line 47 is not working correctly because of .FeedMessage()
-#             feed = gtfs_realtime_pb2.FeedMessage()
-#             feed.ParseFromString(response.content)
-#             data = MessageToJson(feed)
-#             return json.loads(data)
-
-#         except requests.exceptions.RequestException as e:
-#             print(f"Error with API key {api_key}: {e}")
-#             # Try the next API key if an error occurs
-#             continue
-
-    # If all keys fail
-    print("All API keys failed. Please check your keys or internet connection.")
-    return None
-    
-
 def display_data(data):
     # Example: Print the first few entries (adjust based on actual API response)
     if data:
@@ -106,6 +76,3 @@ if __name__ == "__main__":
     print("Fetching MTA data...")
     mta_data = fetch_mta_data()
     display_data(mta_data)
-
-
-# Jan 11,2025
