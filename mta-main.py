@@ -1,8 +1,8 @@
 import requests
 import itertools
 from google.transit import gtfs_realtime_pb2
-# from google.protobuf.json_format import MessageToJson 
-# import json
+from google.protobuf.json_format import MessageToJson 
+import json
 
 # List of API keys
 BUS_API = [
@@ -28,8 +28,7 @@ api_time_cycle = itertools.cycle(Real_Time_Feeds)
 print("Libraries are properly installed!")
 
 def fetch_mta_data():
-    
-    for feed_url in Real_Time_Feeds :
+    for feed_url in Real_Time_Feeds:
         # Get the next API key from the cycle
         api_key = next(api_key_cycle)
         headers = {"x-api-key": api_key}
@@ -39,17 +38,56 @@ def fetch_mta_data():
             response = requests.get(feed_url, headers=headers)
             response.raise_for_status()  # Check for HTTP errors
 
-            #error in .FeedMessage(), must be changed
-            #line 47 is not working correctly because of .FeedMessage()
+            # Print the raw content and headers for debugging
+            # print(f"Response Content-Type: {response.headers.get('Content-Type')}")
+            # print(f"Raw Response Content (First 500 bytes): {response.content[:500]}")
+            
+            # Deserialize the content using FeedMessage
             feed = gtfs_realtime_pb2.FeedMessage()
-            feed.ParseFromString(response.content)
-            data = MessageToJson(feed)
+            feed.ParseFromString(response.content)  # Parse raw protocol buffer data
+            data = MessageToJson(feed)  # Convert to JSON string
+            
+            # Return parsed JSON as a Python dictionary
             return json.loads(data)
 
         except requests.exceptions.RequestException as e:
             print(f"Error with API key {api_key}: {e}")
             # Try the next API key if an error occurs
             continue
+        except Exception as e:
+            print(f"Error parsing response: {e}")
+            print("Raw response (for debugging):", response.content[:500])
+            continue
+
+    # If all keys fail
+    print("All API keys failed. Please check your keys or internet connection.")
+    return None
+
+
+
+# def fetch_mta_data():
+    
+#     for feed_url in Real_Time_Feeds :
+#         # Get the next API key from the cycle
+#         api_key = next(api_key_cycle)
+#         headers = {"x-api-key": api_key}
+
+#         try:
+#             # Make the GET request
+#             response = requests.get(feed_url, headers=headers)
+#             response.raise_for_status()  # Check for HTTP errors
+
+#             #error in .FeedMessage(), must be changed
+#             #line 47 is not working correctly because of .FeedMessage()
+#             feed = gtfs_realtime_pb2.FeedMessage()
+#             feed.ParseFromString(response.content)
+#             data = MessageToJson(feed)
+#             return json.loads(data)
+
+#         except requests.exceptions.RequestException as e:
+#             print(f"Error with API key {api_key}: {e}")
+#             # Try the next API key if an error occurs
+#             continue
 
     # If all keys fail
     print("All API keys failed. Please check your keys or internet connection.")
